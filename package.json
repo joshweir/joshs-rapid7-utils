@@ -1,0 +1,70 @@
+{
+  "name": "joshs-rapid7-utils",
+  "version": "0.1.0",
+  "description": "Utils for fetching logs from Rapid7",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:joshweir/joshs-rapid7-utils.git"
+  },
+  "scripts": {
+    "prettier": "prettier --loglevel warn --write '**/src/**/*.ts' '**/src/**/*.tsx'",
+    "lint": "tslint -c tslint.json '**/src/**/*.{ts,tsx}' --exclude '**/node_modules/**' --exclude '**/dist/**' --project tsconfig-lint.json",
+    "test": "jest --silent",
+    "test:watch": "jest --watch",
+    "coverage": "jest --silent --coverage",
+    "build": "tsc -b --verbose",
+    "example": "RAPID7_API_BASE_URL=https://AU.api.insight.rapid7.com RAPID7_UI_BASE_URL=https://au.ops.insight.rapid7.com/op/AC5B73405FFF88F5BD62# node dist/example"
+  },
+  "author": "Josh Weir",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/runtime": "^7.1.2",
+    "@types/jest": "^23.3.13",
+    "@types/node-fetch": "^2.5.3",
+    "husky": "^1.1.0",
+    "jest": "^24.8.0",
+    "maddis-code-rules": "^1.0.0",
+    "prettier": "^1.13.0",
+    "pretty-quick": "^1.6.0",
+    "ts-jest": "^24.0.2",
+    "ts-loader": "^4.4.1",
+    "ts-node": "^3.3.0",
+    "tslint": "~5.11.0",
+    "typescript": "~3.5.1"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  },
+  "jest": {
+    "globals": {
+      "DEVELOPER_FLAG": "",
+      "DEVELOPER_HOST": "",
+      "window": {},
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    },
+    "testEnvironment": "node",
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(src|test)/.*(\\.|-|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "json",
+      "js",
+      "jsx"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged",
+      "pre-push": "npm run lint && npm run test"
+    }
+  }
+}
