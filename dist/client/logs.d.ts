@@ -1,14 +1,4 @@
-declare type TLogEvent = {
-    timestamp: number;
-    sequence_number: number;
-    message: string;
-};
-declare type TLogEventWithContextLink = TLogEvent & {
-    contextLink: string;
-};
-export declare type TLogEventMaybeHighlighted = TLogEvent & {
-    highlighted: boolean;
-};
+import { TLogEventWithContextLink, TLogEventMaybeHighlighted } from '../types';
 declare const _default: {
     get: {
         byQuery: ({ query, sentTimestamp, rapid7LogFilterIds, }: {

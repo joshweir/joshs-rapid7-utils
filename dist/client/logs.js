@@ -11,22 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("../url");
 const util_1 = require("../util");
 const config_1 = require("../config");
-const isLogEvent = (thing) => typeof thing === 'object' &&
-    typeof thing.timestamp === 'number' &&
-    typeof thing.sequence_number === 'number' &&
-    typeof thing.message === 'string';
-const isLogEventWithLinks = (thing) => typeof thing === 'object' &&
-    typeof thing.timestamp === 'number' &&
-    typeof thing.sequence_number === 'number' &&
-    typeof thing.message === 'string' &&
-    typeof thing.links === 'object' &&
-    thing.links.filter(url_1.isContinuanceLink).length === thing.links.length;
-const isResponseWithLogEvents = (thing) => typeof thing === 'object' &&
-    typeof thing.events === 'object' &&
-    thing.events.filter(isLogEvent).length === thing.events.length;
-const isResponseWithLogEventsWithLinks = (thing) => typeof thing === 'object' &&
-    typeof thing.events === 'object' &&
-    thing.events.filter(isLogEventWithLinks).length === thing.events.length;
+const types_1 = require("../types");
 const toLogEventWithContextLink = (logEvent) => (Object.assign({}, logEvent, { contextLink: logEvent.links.filter(({ rel }) => rel === 'Context').map(({ href }) => href)[0] }));
 const toLogEventWithHighlightedLog = (highlightedSequenceNumber) => (logEvent) => (Object.assign({}, logEvent, { highlighted: logEvent.sequence_number === highlightedSequenceNumber }));
 const buildOperationIdLink = ({ operationId, sentTimestamp, logFilterId, }) => `${config_1.getConfig().apiBaseUrl}/log_search/query/logs/${logFilterId}/?from=${sentTimestamp - 7 * util_1.DAYS}&to=${sentTimestamp +
@@ -38,7 +23,7 @@ const byOperationId = ({ operationId, sentTimestamp, rapid7LogFilterIds }) => __
     for (const logFilterId of rapid7LogFilterIds) {
         const response = yield url_1.fetchR7(buildOperationIdLink({ operationId, sentTimestamp, logFilterId }));
         const data = yield response.json();
-        if (!isResponseWithLogEventsWithLinks(data)) {
+        if (!types_1.isResponseWithLogEventsWithLinks(data)) {
             throw new Error(`response does not contain log events: ${JSON.stringify(data, null, 2)}`);
         }
         logEvents.push(...data.events.slice(0, config_1.getConfig().maxLogEventsPerFilter));
@@ -50,7 +35,7 @@ const byQuery = ({ query, sentTimestamp, rapid7LogFilterIds, }) => __awaiter(thi
     for (const logFilterId of rapid7LogFilterIds) {
         const response = yield url_1.fetchR7(buildQueryLink({ query, sentTimestamp, logFilterId }));
         const data = yield response.json();
-        if (!isResponseWithLogEventsWithLinks(data)) {
+        if (!types_1.isResponseWithLogEventsWithLinks(data)) {
             throw new Error(`response does not contain log events: ${JSON.stringify(data, null, 2)}`);
         }
         logEvents.push(...data.events.slice(0, config_1.getConfig().maxLogEventsPerFilter));
@@ -60,7 +45,7 @@ const byQuery = ({ query, sentTimestamp, rapid7LogFilterIds, }) => __awaiter(thi
 const surroundingContext = (contextUrl, sequenceNumber) => __awaiter(this, void 0, void 0, function* () {
     const response = yield url_1.fetchR7(contextUrl);
     const data = yield response.json();
-    if (!isResponseWithLogEvents(data)) {
+    if (!types_1.isResponseWithLogEvents(data)) {
         throw new Error(`response does not contain log events: ${JSON.stringify(data, null, 2)}`);
     }
     return data.events.map(toLogEventWithHighlightedLog(sequenceNumber));

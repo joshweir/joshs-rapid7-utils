@@ -10,14 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_fetch_1 = require("node-fetch");
 const config_1 = require("./config");
+const types_1 = require("./types");
 const HTTP_ACCEPTED = 202;
 const HTTP_OK = 200;
-exports.isContinuanceLink = (thing) => typeof thing === 'object' && typeof thing.rel === 'string' && typeof thing.href === 'string';
-const isResponseWithContinuanceLinks = (thing) => typeof thing === 'object' &&
-    typeof thing.links === 'object' &&
-    thing.links.filter(exports.isContinuanceLink).length === thing.links.length;
 const parseContinuanceLink = (data) => {
-    if (!isResponseWithContinuanceLinks(data)) {
+    if (!types_1.isResponseWithContinuanceLinks(data)) {
         throw new Error(`no continuance link found: ${JSON.stringify(data, null, 2)}`);
     }
     const selfLink = data.links.find(({ rel }) => rel === 'Self');

@@ -1,23 +1,9 @@
 import nodeFetch, { RequestInfo } from 'node-fetch';
 import { getConfig } from './config';
+import { isResponseWithContinuanceLinks } from './types';
 
 const HTTP_ACCEPTED = 202;
 const HTTP_OK = 200;
-
-export type TContinuanceLink = {
-  rel: string;
-  href: string;
-};
-export const isContinuanceLink = (thing: any): thing is TContinuanceLink =>
-  typeof thing === 'object' && typeof thing.rel === 'string' && typeof thing.href === 'string';
-
-type TResponseWithContinuanceLinks = {
-  links: TContinuanceLink[];
-};
-const isResponseWithContinuanceLinks = (thing: any): thing is TResponseWithContinuanceLinks =>
-  typeof thing === 'object' &&
-  typeof thing.links === 'object' &&
-  thing.links.filter(isContinuanceLink).length === thing.links.length;
 
 const parseContinuanceLink = (data: any): string => {
   if (!isResponseWithContinuanceLinks(data)) {

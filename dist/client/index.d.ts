@@ -15,25 +15,13 @@ export declare const rapid7UtilsClient: (config: Config) => {
                 query: string;
                 sentTimestamp: number;
                 rapid7LogFilterIds: string[];
-            }) => Promise<({
-                timestamp: number;
-                sequence_number: number;
-                message: string;
-            } & {
-                contextLink: string;
-            })[]>;
+            }) => Promise<import("../types").TLogEventWithContextLink[]>;
             byOperationId: ({ operationId, sentTimestamp, rapid7LogFilterIds }: {
                 operationId: string;
                 sentTimestamp: number;
                 rapid7LogFilterIds: string[];
-            }) => Promise<({
-                timestamp: number;
-                sequence_number: number;
-                message: string;
-            } & {
-                contextLink: string;
-            })[]>;
-            surroundingContext: (contextUrl: string, sequenceNumber: number) => Promise<import("./logs").TLogEventMaybeHighlighted[]>;
+            }) => Promise<import("../types").TLogEventWithContextLink[]>;
+            surroundingContext: (contextUrl: string, sequenceNumber: number) => Promise<import("../types").TLogEventMaybeHighlighted[]>;
         };
     };
 };

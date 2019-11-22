@@ -1,57 +1,12 @@
-import { fetchR7, TContinuanceLink, isContinuanceLink } from '../url';
+import { fetchR7 } from '../url';
 import { DAYS, parsev4 } from '../util';
 import { getConfig } from '../config';
-
-type TLogEvent = {
-  timestamp: number;
-  sequence_number: number;
-  message: string;
-};
-const isLogEvent = (thing: any): thing is TLogEvent =>
-  typeof thing === 'object' &&
-  typeof thing.timestamp === 'number' &&
-  typeof thing.sequence_number === 'number' &&
-  typeof thing.message === 'string';
-
-type TLogEventWithLinks = TLogEvent & {
-  links: TContinuanceLink[];
-};
-const isLogEventWithLinks = (thing: any): thing is TLogEventWithLinks =>
-  typeof thing === 'object' &&
-  typeof thing.timestamp === 'number' &&
-  typeof thing.sequence_number === 'number' &&
-  typeof thing.message === 'string' &&
-  typeof thing.links === 'object' &&
-  thing.links.filter(isContinuanceLink).length === thing.links.length;
-
-type TLogEventWithContextLink = TLogEvent & {
-  contextLink: string;
-};
-
-type TResponseWithLogEvents = {
-  events: TLogEvent[];
-};
-const isResponseWithLogEvents = (thing: any): thing is TResponseWithLogEvents =>
-  typeof thing === 'object' &&
-  typeof thing.events === 'object' &&
-  thing.events.filter(isLogEvent).length === thing.events.length;
-
-type TResponseWithLogEventsWithLinks = {
-  events: TLogEventWithLinks[];
-};
-const isResponseWithLogEventsWithLinks = (thing: any): thing is TResponseWithLogEventsWithLinks =>
-  typeof thing === 'object' &&
-  typeof thing.events === 'object' &&
-  thing.events.filter(isLogEventWithLinks).length === thing.events.length;
+import { TLogEventWithContextLink, TLogEventWithLinks, TContinuanceLink, isContinuanceLink, TLogEvent, TLogEventMaybeHighlighted, isResponseWithLogEventsWithLinks, isResponseWithLogEvents } from '../types';
 
 const toLogEventWithContextLink = (logEvent: TLogEventWithLinks): TLogEventWithContextLink => ({
   ...logEvent,
   contextLink: logEvent.links.filter(({ rel }) => rel === 'Context').map(({ href }) => href)[0],
 });
-
-export type TLogEventMaybeHighlighted = TLogEvent & {
-  highlighted: boolean;
-};
 
 const toLogEventWithHighlightedLog = (highlightedSequenceNumber: number) => (
   logEvent: TLogEvent,
