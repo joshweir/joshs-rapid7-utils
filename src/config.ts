@@ -33,7 +33,6 @@ export const setConfig = (inputConfig: Config) => {
 }
 
 export const getConfig = () => {
-  console.log(config);
   if (!isConfig(config)) {
     throw new Error(`invalid config`);
   }

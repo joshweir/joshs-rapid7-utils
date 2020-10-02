@@ -19,7 +19,6 @@ exports.setConfig = (inputConfig) => {
     config = Object.assign({}, inputConfig, { maxLogEventsPerFilter: inputConfig.maxLogEventsPerFilter || 5 });
 };
 exports.getConfig = () => {
-    console.log(config);
     if (!exports.isConfig(config)) {
         throw new Error(`invalid config`);
     }
